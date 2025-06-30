@@ -1,0 +1,29 @@
+16 opcodes
+[ OPCODE (4 bits) ][ DEST (4 bits) ][ SRC (4 bits) ][ IMM (4 bits) or Flags ]
+
+
+Data Movement, opcodes 0x0 - 0x3
+MV Rn, Rm	    0000 nnnn mmmm 0000	Move register to register
+MV Rn, imm	    0001 nnnn iiii iiii	Move immediate to register
+LD Rn, [addr]	0010 nnnn aaaa aaaa	Load from memory
+ST Rn, [addr]	0011 nnnn aaaa aaaa	Store to memory
+
+Arith. and Logic, opcodes 0x4 - 0x7
+ADD Rn, Rm	    0100 nnnn mmmm 0000	Add
+SUB Rn, Rm	    0101 nnnn mmmm 0000	Subtract
+AND Rn, Rm	    0110 nnnn mmmm 0000	Bitwise AND
+OR Rn, Rm	    0111 nnnn mmmm 0000	Bitwise OR
+
+Control Flow, opcodes 0x8 - 0xB
+JMP addr	    1000 0000 aaaa aaaa	Unconditional jump
+JZ addr	        1001 0000 aaaa aaaa	Jump if Zero flag set
+JNZ addr	    1010 0000 aaaa aaaa	Jump if Zero flag clear
+HLT	1011        0000 0000 0000	    Halt processor
+
+Stack Instructions, opcodes 0xC - 0xD
+PUSH Rn	        1100 nnnn 0000 0000	Push register to stack
+POP Rn	        1101 nnnn 0000 0000	Pop register from stack
+
+Misc, opcodes 0xE - 0xF
+NOP	            1110 0000 0000 0000	No operation
+OUT Rn	        1111 nnnn 0000 0000	Output register (e.g., to LEDs, console)
