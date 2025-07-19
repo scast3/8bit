@@ -18,7 +18,7 @@ Control Flow, opcodes 0x8 - 0xB
 JMP addr	    1000 0000 aaaa aaaa	Unconditional jump
 JZ addr	        1001 0000 aaaa aaaa	Jump if Zero flag set
 JNZ addr	    1010 0000 aaaa aaaa	Jump if Zero flag clear
-HLT	1011        0000 0000 0000	    Halt processor
+HLT	            1011 0000 0000 0000	Halt processor
 
 Stack Instructions, opcodes 0xC - 0xD
 PUSH Rn	        1100 nnnn 0000 0000	Push register to stack
