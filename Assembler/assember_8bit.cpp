@@ -14,6 +14,11 @@ Date: 7/20/2025
 std::unordered_map<std::string, std::string> instructions;
 std::unordered_map<std::string, std::string> symbols;
 
+int pc;
+
+//vector to store all commands
+std::vector<std::string> commands;
+
 // load maps from the textfiles
 void load_map(const std::string& filename, std::unordered_map<std::string, std::string>& my_map) {
     std::ifstream infile(filename);
@@ -31,10 +36,46 @@ void load_map(const std::string& filename, std::unordered_map<std::string, std::
     infile.close();
 }
 
-int pc;
+std::string next_command(std::ifstream& infile) {
+    std::string line;
+    std::regex comments("//.*");
+    std::regex whitespaces("\\s+");
 
-//vector to store all commands
-std::vector<std::string> commands;
+    if (std::getline(infile, line)){
+        line = std::regex_replace(line, comments, "");
+        line = std::regex_replace(line, whitespaces, "");
+        return line;
+    }return "~"; //EOF marker - might need to change????
+
+    // use this to test
+    // while (std::getline(infile, line)) {
+    //     line = std::regex_replace(line, comments, "");
+    //     line = std::regex_replace(line, whitespaces, "");
+    //     // Process the line (for now, just print it)
+    //     std::cout << line << std::endl;
+    // }
+}
+
+void first_pass(std::ifstream& infile, int& pc){
+    pc = 0;
+    std::string command;
+    std::regex labelFormat("^\\((.*)\\)$");
+    for (;;){
+        command = next_command(infile);
+        if (command == "~") break; // break if file end
+        
+        if (!(command == "")){
+            if(command[0] == '('){ // found label - there might be a better way than just looking at first char
+                std::string label = std::regex_replace(command, labelFormat, "$1");
+                symbols[label] = pc; // store the pc for each label
+            }else{
+                commands.push_back(command);
+                pc++;
+            }
+        }
+    }   
+}
+
 
 // input will be in the format: ./Assembler <filename.asm>
 
@@ -54,7 +95,7 @@ int main (int argc, char** argv){
         return 1;
     }
 
-    // assembler logic does here
+    // assembler logic goes here
 
     return 0;
 }
