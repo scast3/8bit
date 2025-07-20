@@ -1,29 +1,46 @@
-16 opcodes
-[ OPCODE (4 bits) ][ DEST (4 bits) ][ SRC (4 bits) ][ IMM (4 bits) or Flags ]
+Overview:
+Data Width: 8-bit
+Instruction Width: 16-bit
+Address Space: 16-bit (64KB)
+
+ISA Format 1: Register - Register operations
+| opcode [15:12] | RD [11:9] | RS1 [8:6] | RS2 [5:3] | Unused [2:0] |
+
+ISA Format 2: Register - Immediate operations
+| opcode [15:12] | RD [11:9] |    Immediate [8:1]    | Unused [0]   |
+
+ISA Format 3: Memory Operations
+| opcode [15:12] | RD [11:9] |             Address [8:0]            |
+
+ISA Format 4: Jump Operations
+| opcode [15:12] |                 Address [11:0]                   |
 
 
-Data Movement, opcodes 0x0 - 0x3
-MV Rn, Rm	    0000 nnnn mmmm 0000	Move register to register
-MV Rn, imm	    0001 nnnn iiii iiii	Move immediate to register
-LD Rn, [addr]	0010 nnnn aaaa aaaa	Load from memory
-ST Rn, [addr]	0011 nnnn aaaa aaaa	Store to memory
 
-Arith. and Logic, opcodes 0x4 - 0x7
-ADD Rn, Rm	    0100 nnnn mmmm 0000	Add
-SUB Rn, Rm	    0101 nnnn mmmm 0000	Subtract
-AND Rn, Rm	    0110 nnnn mmmm 0000	Bitwise AND
-OR Rn, Rm	    0111 nnnn mmmm 0000	Bitwise OR
+Arithmetic/Logic Instructions
+Instruction        | Opcode | Format | Description    
+ADD RD, RS1, RS2   |  0000  |    1   | RD = RS1 + RS2 
+SUB RD, RS1, RS2   |  0001  |    1   | RD = RS1 - RS2 
+AND RD, RS1, RS2   |  0010  |    1   | RD = RS1 & RS2 
+OR RD, RS1, RS2    |  0011  |    1   | RD = RS1 | RS2 
+XOR RD, RS1, RS2   |  0100  |    1   | RD = RS1 ^ RS2 
+NOT RD, RS1        |  0101  |    1   | RD = ~RS1      
 
-Control Flow, opcodes 0x8 - 0xB
-JMP addr	    1000 0000 aaaa aaaa	Unconditional jump
-JZ addr	        1001 0000 aaaa aaaa	Jump if Zero flag set
-JNZ addr	    1010 0000 aaaa aaaa	Jump if Zero flag clear
-HLT	            1011 0000 0000 0000	Halt processor
+Data Movement Instructions
+Instruction        | Opcode | Format | Description    
+MOV RD, RS1        |  0110  |    1   | RD = RS1       
+LDI RD, imm        |  0111  |    2   | RD = 8-bit imm 
+LD RD, addr        |  1000  |    3   | RD = MEM[addr] 
+ST RS, ADDR        |  1001  |    3   | MEM[addr] = RS 
 
-Stack Instructions, opcodes 0xC - 0xD
-PUSH Rn	        1100 nnnn 0000 0000	Push register to stack
-POP Rn	        1101 nnnn 0000 0000	Pop register from stack
+Control Flow Instructions
+Instruction        | Opcode | Format | Description    
+JMP addr           |  1010  |    4   | PC = ADDR      
+JZ addr            |  1011  |    4   | if (Z == 1) PC = ADDR 
+JNZ addr           |  1100  |    4   | if (Z == 0) PC = ADDR 
+JC addr            |  1101  |    4   | if (C == 1) PC = ADDR 
 
-Misc, opcodes 0xE - 0xF
-NOP	            1110 0000 0000 0000	No operation
-OUT Rn	        1111 nnnn 0000 0000	Output register (e.g., to LEDs, console)
+System Instructions
+Instruction        | Opcode | Format | Description    
+NOP                |  1110  |    -   | No operation
+HLT                |  1111  |    -   | Halt processor 

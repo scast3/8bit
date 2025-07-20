@@ -1,4 +1,8 @@
-R0–R7	General-purpose registers
-PC	Program Counter (implicit)
-SP	Stack Pointer (optional for now)
-FLAGS	Z (Zero), C (Carry), N (Negative), etc.
+R0-R5: 8-bit general purpose registers
+R6:    16-bit stack pointer (SP)
+R7:    8-bit general purpose register
+
+Hardware Registers (not user-accessible):
+PC:    16-bit program counter
+IR:    16-bit instruction register
+FLAGS: Zero (Z), Carry (C), Negative (N)
