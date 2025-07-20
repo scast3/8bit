@@ -3,27 +3,48 @@ parameter ALU_SUB = 3'b001
 parameter ALU_AND = 3'b010
 parameter ALU_OR = 3'b011
 parameter ALU_XOR = 3'b100
-parameter ALU_NOT = 3'b100
+parameter ALU_NOT = 3'b101
+parameter ALU_SHL = 3'b110
+parameter ALU_SHR = 3'b111
 
 module alu (
-    input  wire [7:0] x,
-    input  wire [7:0] y,
-    input  wire [1:0] sel,    // Operation select
-    output reg  [7:0] result, // Result
-    output reg        zero    // Zero flag
+    input  wire [7:0] a,
+    input  wire [7:0] b,
+    input  wire [2:0] op,
+    output reg  [7:0] result,
+    output reg zero,
+    output reg carry,
+    output reg negative 
 );
 
 always @(*) begin
-    case (sel)
-        2'b00: result = a + b;   // ADD
-        2'b01: result = a - b;   // SUB
-        2'b10: result = a & b;   // AND
-        2'b11: result = a | b;   // OR
+    carry = 0;
+    result = 8'b0;
+    case (op)
+        ALU_ADD: begin
+            {carry, result} = a + b;
+        end
+        ALU_SUB: begin
+            {carry, result} = a - b;
+            carry = (x < y); // carry = borrow
+        end
+        ALU_AND: result = a & b;
+        ALU_OR: result = a | b;
+        ALU_XOR: result = a ^ b;
+        ALU_NOT: result = ~a;
+        ALU_SHL: begin
+            result = x << 1;
+            carry = x[7]; // carry out from MSB
+        end
+        ALU_SHR: begin
+            result = x >> 1;
+            carry = x[0]; // carry out from LSB
+        end
         default: result = 8'b0;
     endcase
 
-    // Set zero flag
     zero = (result == 8'b0);
+    negative = result[7];
 end
 
 endmodule
