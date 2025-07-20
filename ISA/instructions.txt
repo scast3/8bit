@@ -37,7 +37,7 @@ Control Flow Instructions
 Instruction        | Opcode | Format | Description    
 JMP addr           |  1010  |    4   | PC = ADDR      
 JZ addr            |  1011  |    4   | if (Z == 1) PC = ADDR 
-JNZ addr           |  1100  |    4   | if (Z == 0) PC = ADDR 
+CALL addr          |  1100  |    4   | Save PC+1 to R7, then jump 
 JC addr            |  1101  |    4   | if (C == 1) PC = ADDR 
 
 System Instructions
@@ -50,3 +50,7 @@ MOV RD, RS1 has been replaced with a left-shift instruction. This is because
 you can OR RD, RS1, R0 assuming R0 is zero. Am also looking to see if any of
 the jumps are redundant and determining whether to have signed vs unsigned
 immediates. Could also consider stack operations (push/pop)
+
+v3 changes:
+Defined immediates to be unsigned (might regret later). Replaced JNZ with CALL
+and made R7 a 16-bit register to contain return address

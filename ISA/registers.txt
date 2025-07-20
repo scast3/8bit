@@ -1,6 +1,6 @@
 R0-R5: 8-bit general purpose registers
 R6:    16-bit stack pointer (SP)
-R7:    8-bit general purpose register
+R7:    16-bit general purpose register (return addr)
 
 Hardware Registers (not user-accessible):
 PC:    16-bit program counter
