@@ -28,7 +28,7 @@ NOT RD, RS1        |  0101  |    1   | RD = ~RS1
 
 Data Movement Instructions
 Instruction        | Opcode | Format | Description    
-MOV RD, RS1        |  0110  |    1   | RD = RS1       
+SHL RD, RS1        |  0110  |    1   | RD = RS1 << 1       
 LDI RD, imm        |  0111  |    2   | RD = 8-bit imm 
 LD RD, addr        |  1000  |    3   | RD = MEM[addr] 
 ST RS, ADDR        |  1001  |    3   | MEM[addr] = RS 
@@ -44,3 +44,9 @@ System Instructions
 Instruction        | Opcode | Format | Description    
 NOP                |  1110  |    -   | No operation
 HLT                |  1111  |    -   | Halt processor 
+
+v2 changes:
+MOV RD, RS1 has been replaced with a left-shift instruction. This is because
+you can OR RD, RS1, R0 assuming R0 is zero. Am also looking to see if any of
+the jumps are redundant and determining whether to have signed vs unsigned
+immediates. Could also consider stack operations (push/pop)
