@@ -17,7 +17,7 @@ ISA Format 4: Jump Operations
 
 
 
-Arithmetic/Logic Instructions
+ALU Instructions
 Instruction        | Opcode | Format | Description    
 ADD RD, RS1, RS2   |  0000  |    1   | RD = RS1 + RS2 
 SUB RD, RS1, RS2   |  0001  |    1   | RD = RS1 - RS2 
@@ -25,25 +25,27 @@ AND RD, RS1, RS2   |  0010  |    1   | RD = RS1 & RS2
 OR RD, RS1, RS2    |  0011  |    1   | RD = RS1 | RS2 
 XOR RD, RS1, RS2   |  0100  |    1   | RD = RS1 ^ RS2 
 NOT RD, RS1        |  0101  |    1   | RD = ~RS1      
+SHL RD, RS1        |  0110  |    1   | RD = RS1 << 1
+SHR RD, RS1        |  0111  |    1   | RD = RS1 >> 1
 
 Data Movement Instructions
-Instruction        | Opcode | Format | Description    
-SHL RD, RS1        |  0110  |    1   | RD = RS1 << 1       
-LDI RD, imm        |  0111  |    2   | RD = 8-bit imm 
-LD RD, addr        |  1000  |    3   | RD = MEM[addr] 
-ST RS, ADDR        |  1001  |    3   | MEM[addr] = RS 
+Instruction        | Opcode | Format | Description       
+LDI RD, imm        |  1000  |    2   | RD = 8-bit imm 
+LD RD, addr        |  1001  |    3   | RD = MEM[addr] 
+ST RS, addr        |  1010  |    3   | MEM[addr] = RS    
 
 Control Flow Instructions
 Instruction        | Opcode | Format | Description    
-JMP addr           |  1010  |    4   | PC = ADDR      
-JZ addr            |  1011  |    4   | if (Z == 1) PC = ADDR 
-CALL addr          |  1100  |    4   | Save PC+1 to R7, then jump 
-JC addr            |  1101  |    4   | if (C == 1) PC = ADDR 
+JMP addr           |  1011  |    4   | PC = ADDR      
+JZ addr            |  1100  |    4   | if (Z == 1) PC = ADDR  
+JC addr            |  1101  |    4   | if (C == 1) PC = ADDR
+CALL addr          |  1110  |    4   | Save PC+1 to R7, then jump
+RET                |  1111  |    -   | PC = R7, not to be confused with HLT
 
 System Instructions
 Instruction        | Opcode | Format | Description    
-NOP                |  1110  |    -   | No operation
-HLT                |  1111  |    -   | Halt processor 
+NOP                |    -   |    -   | No operation - use all 0s
+HLT                |    -   |    -   | Halt processor - use all 1s
 
 v2 changes:
 MOV RD, RS1 has been replaced with a left-shift instruction. This is because
@@ -54,3 +56,17 @@ immediates. Could also consider stack operations (push/pop)
 v3 changes:
 Defined immediates to be unsigned (might regret later). Replaced JNZ with CALL
 and made R7 a 16-bit register to contain return address
+
+v4 changes:
+NOP and HLT don't need their own opcodes, will be special cases. Adding RET and
+right shift. Changed immediates to signed. Decided to set R0 to 0 for convenience.
+Push and Pop can be implemented in software as follows:
+// PUSH R1
+SP = SP - 1;
+mem[SP] = R1;
+
+// POP R1
+R1 = mem[SP];
+SP = SP + 1;
+MOV can be implemented with:
+OR RD, RS1, R0
