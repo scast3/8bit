@@ -11,20 +11,19 @@ Date: 7/20/2025
 #include <regex>
 
 // global maps
-std::unordered_map<std::string, std::uint8_t> instructions;
+std::unordered_map<std::string, std::string> instructions;
+std::unordered_map<std::string, std::string> symbols;
 
 // load maps from the textfiles
-void load_map(const std::string& filename, std::unordered_map<std::string, std::uint8_t>& my_map) {
+void load_map(const std::string& filename, std::unordered_map<std::string, std::string>& my_map) {
     std::ifstream infile(filename);
     std::string line;
 
     while (std::getline(infile, line)) {
         std::istringstream iss(line);
-        std::string key;
-        std::string value_str;
+        std::string key, value;
 
-        if (std::getline(iss, key, ',') && std::getline(iss, value_str)) {
-            uint8_t value = static_cast<uint8_t>(std::stoi(value_str));
+        if (std::getline(iss, key, ',') && std::getline(iss, value)) {
             my_map[key] = value;
         }
     }
@@ -45,6 +44,7 @@ int main (int argc, char** argv){
         std::cout << "usage: assembler prog.asm" << std::endl;
     }
     load_map("opcodes.txt", instructions);
+    load_map("symbols.txt", symbols);
 
     std::string input_file = argv[1];
     std::ifstream infile(input_file);
